@@ -8,14 +8,13 @@ import com.example.demo.model.requests.CreateUserRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
-import static org.junit.Assert.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import javax.swing.text.html.parser.Entity;
-
 import java.util.Optional;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -69,7 +68,7 @@ public class UserControllerTest {
         request.setPassword(password);
         request.setConfirmPassword(password);
 
-        ResponseEntity response = userController.createUser(request);
+        ResponseEntity<User> response = userController.createUser(request);
         assertEquals(400, response.getStatusCodeValue());
     }
 
@@ -83,7 +82,7 @@ public class UserControllerTest {
         request.setUsername(username);
         request.setPassword(password);
         request.setConfirmPassword(confirmPassword);
-        ResponseEntity response = userController.createUser(request);
+        ResponseEntity<User> response = userController.createUser(request);
         assertEquals(400, response.getStatusCodeValue());
     }
 
@@ -92,13 +91,7 @@ public class UserControllerTest {
         User u = new User();
 
         String username = "test";
-        String password = "testPassword";
         when(userRepo.findByUsername(username)).thenReturn(u);
-
-        CreateUserRequest request = new CreateUserRequest();
-        request.setUsername(username);
-        request.setPassword(password);
-        request.setConfirmPassword(password);
 
         ResponseEntity<User> response = userController.findByUserName(username);
         assertEquals(200, response.getStatusCodeValue());
@@ -106,18 +99,11 @@ public class UserControllerTest {
 
     @Test
     @DisplayName("Find user by id")
-    public void find_user_by_id() throws Exception {
-        String username = "test";
-        String password = "testPassword";
+    public void find_user_by_id() {
         User user1 = new User();
 
 
         when(userRepo.findById(0L)).thenReturn(Optional.of(user1));
-
-        CreateUserRequest request = new CreateUserRequest();
-        request.setUsername(username);
-        request.setPassword(password);
-        request.setConfirmPassword(password);
 
         ResponseEntity<User> response = userController.findById(0L);
         assertEquals(200, response.getStatusCodeValue());

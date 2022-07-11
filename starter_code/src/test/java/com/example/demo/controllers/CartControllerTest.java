@@ -10,14 +10,15 @@ import com.example.demo.model.persistence.repositories.UserRepository;
 import com.example.demo.model.requests.ModifyCartRequest;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -27,14 +28,14 @@ import static org.mockito.Mockito.when;
 @RunWith(Parameterized.class)
 public class CartControllerTest {
 
-    private String username;
-    private String password;
-    private String itemId;
-    private String quantity;
+    private final String username;
+    private final String password;
+    private final String itemId;
+    private final String quantity;
     private CartController cartController;
-    private UserRepository userRepo = mock(UserRepository.class);
-    private CartRepository cartRepo = mock(CartRepository.class);
-    private ItemRepository itemRepo = mock(ItemRepository.class);
+    private final UserRepository userRepo = mock(UserRepository.class);
+    private final CartRepository cartRepo = mock(CartRepository.class);
+    private final ItemRepository itemRepo = mock(ItemRepository.class);
 
     public CartControllerTest(String username, String password, String itemId, String quantity) {
         super();
@@ -47,7 +48,7 @@ public class CartControllerTest {
     @Parameterized.Parameters
     public static Collection initData()
     {
-        String reqData[][] = {{"testuser1", "testpassword1", "5", "30"}, {"testuser2", "testpassword2", "5", "40"}, {"testuser3", "testpassword3", "5", "100"}};
+        String[][] reqData = {{"testuser1", "testpassword1", "5", "30"}, {"testuser2", "testpassword2", "5", "40"}, {"testuser3", "testpassword3", "5", "100"}};
         return Arrays.asList(reqData);
     }
 
@@ -84,7 +85,7 @@ public class CartControllerTest {
         when(cartRepo.save(cart)).thenReturn(null);
 
         ModifyCartRequest request = new ModifyCartRequest();
-        request.setItemId(Long.valueOf(itemId));
+        request.setItemId(Long.parseLong(itemId));
         request.setUsername(username);
         request.setQuantity(Integer.parseInt(quantity));
 
@@ -95,6 +96,7 @@ public class CartControllerTest {
 
         Cart returnedCart = response.getBody();
         assertNotNull(cart);
+        assert returnedCart != null;
         assertEquals(request.getQuantity(), returnedCart.getItems().size());
         assertEquals(returnedCart.getTotal(), cart.getTotal());
     }
@@ -131,7 +133,7 @@ public class CartControllerTest {
         when(itemRepo.findById(Long.valueOf(itemId))).thenReturn(Optional.empty());
 
         ModifyCartRequest request = new ModifyCartRequest();
-        request.setItemId(Long.valueOf(itemId));
+        request.setItemId(Long.parseLong(itemId));
         request.setUsername(username);
         request.setQuantity(Integer.parseInt(quantity));
 
@@ -164,7 +166,7 @@ public class CartControllerTest {
         when(cartRepo.save(cart)).thenReturn(null);
 
         ModifyCartRequest request = new ModifyCartRequest();
-        request.setItemId(Long.valueOf(itemId));
+        request.setItemId(Long.parseLong(itemId));
         request.setUsername(username);
         request.setQuantity(Integer.parseInt(quantity));
 
@@ -175,6 +177,7 @@ public class CartControllerTest {
 
         Cart returnedCart = response.getBody();
         assertNotNull(cart);
+        assert returnedCart != null;
         assertEquals(0, returnedCart.getItems().size());
         assertEquals(returnedCart.getTotal(), cart.getTotal());
     }
@@ -211,7 +214,7 @@ public class CartControllerTest {
         when(itemRepo.findById(Long.valueOf(itemId))).thenReturn(Optional.empty());
 
         ModifyCartRequest request = new ModifyCartRequest();
-        request.setItemId(Long.valueOf(itemId));
+        request.setItemId(Long.parseLong(itemId));
         request.setUsername(username);
         request.setQuantity(Integer.parseInt(quantity));
 
