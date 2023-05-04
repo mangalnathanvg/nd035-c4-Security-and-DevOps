@@ -75,8 +75,4 @@ public class CartController {
 		log.info("[REMOVE FROM CART] [Success] for user : " + user.getUsername());
 		return ResponseEntity.ok(cart);
 	}
-
-	public void setItemRepository(ItemRepository itemRepository) {
-		this.itemRepository = itemRepository;
-	}
 }
